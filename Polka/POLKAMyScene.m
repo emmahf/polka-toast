@@ -14,16 +14,16 @@
     if (self = [super initWithSize:size]) {
         /* Setup your scene here */
         
-        self.backgroundColor = [SKColor colorWithRed:0.15 green:0.15 blue:0.3 alpha:1.0];
+        self.backgroundColor = [SKColor whiteColor];
         
-        SKLabelNode *myLabel = [SKLabelNode labelNodeWithFontNamed:@"Chalkduster"];
-        
-        myLabel.text = @"Hello, World!";
-        myLabel.fontSize = 30;
-        myLabel.position = CGPointMake(CGRectGetMidX(self.frame),
-                                       CGRectGetMidY(self.frame));
-        
-        [self addChild:myLabel];
+        //        SKLabelNode *myLabel = [SKLabelNode labelNodeWithFontNamed:@"Helvetica Neue"];
+        //
+        //        myLabel.text = @"Polka";
+        //        myLabel.fontSize = 30;
+        //        myLabel.position = CGPointMake(CGRectGetMidX(self.frame),
+        //                                       CGRectGetMidY(self.frame));
+        //
+        //        [self addChild:myLabel];
     }
     return self;
 }
@@ -34,15 +34,23 @@
     for (UITouch *touch in touches) {
         CGPoint location = [touch locationInNode:self];
         
-        SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithImageNamed:@"Spaceship"];
+        SKShapeNode *circleNode = [[SKShapeNode alloc ]init];
+        CGMutablePathRef circle = CGPathCreateMutable();
+        CGPathAddArc(circle, NULL, 0, 0, 10, 0, M_PI*2, YES);
         
-        sprite.position = location;
+        circleNode.path = circle;
+        circleNode.name=@"circleNode";
+        circleNode.fillColor = [SKColor colorWithRed:0.9 green:0.3 blue:0.235 alpha:1.0];
+        circleNode.position = location;
         
-        SKAction *action = [SKAction rotateByAngle:M_PI duration:1];
+        SKAction *grow = [SKAction scaleTo:3.0 duration:0.3];
+        SKAction *shrink = [SKAction scaleTo:1.0 duration:0.3];
+        SKAction *pause = [SKAction waitForDuration:1.0];
+        SKAction *pulse = [SKAction sequence:@[grow, shrink, pause]];
         
-        [sprite runAction:[SKAction repeatActionForever:action]];
+        [circleNode runAction:[SKAction repeatActionForever:pulse]];
         
-        [self addChild:sprite];
+        [self addChild:circleNode];
     }
 }
 
